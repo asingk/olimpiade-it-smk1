@@ -1,48 +1,16 @@
 <script setup>
 import axios from "axios";
 
-const desserts = [
-  {
-    dessert: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
-  },
-  {
-    dessert: 'Ice cream sandwich',
-    calories: 237,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
-  },
-  {
-    dessert: 'Eclair',
-    calories: 262,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
-  },
-  {
-    dessert: 'Cupcake',
-    calories: 305,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
-  },
-  {
-    dessert: 'Gingerbread',
-    calories: 356,
-    fat: 6,
-    carbs: 24,
-    protein: 4,
-  },
-]
 import { ref } from 'vue';
 
 const products = ref([]);
-async function getProducts() {
-  axios.get('https://dummyjson.com/products')
+function getProducts() {
+  axios.get('https://dummyjson.com/products', {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem("token")}`,
+      'Content-Type': 'application/json'
+    }
+  })
     .then(function (response) {
       // handle success
       console.log(response.data.products);
@@ -66,18 +34,7 @@ getProducts()
       <th class="text-uppercase">
         Title
       </th>
-      <th>
-        description
-      </th>
-      <th>
-        price
-      </th>
-      <th>
-        discount(%)
-      </th>
-      <th>
-        rating
-      </th>
+      <th></th>
     </tr>
     </thead>
 
@@ -90,16 +47,11 @@ getProducts()
         {{ item.title }}
       </td>
       <td class="text-center">
-        {{ item.description }}
-      </td>
-      <td class="text-center">
-        {{ item.price }}
-      </td>
-      <td class="text-center">
-        {{ item.discountPercentage }}
-      </td>
-      <td class="text-center">
-        {{ item.rating }}
+        <VRow align="center" justify="center">
+          <VCol cols="auto">
+            <VBtn color="success" density="comfortable" icon="raphael:view" @click="$router.push('/products/' + item.id)"></VBtn>
+          </VCol>
+        </VRow>
       </td>
     </tr>
     </tbody>

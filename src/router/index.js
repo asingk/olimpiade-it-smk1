@@ -40,6 +40,11 @@ const router = createRouter({
           path: 'products',
           component: () => import('../pages/products.vue'),
         },
+          {
+              path: 'products/:id',
+              component: () => import('../pages/product-detail.vue'),
+              props: true,
+          },
       ],
     },
     {
@@ -48,6 +53,7 @@ const router = createRouter({
       children: [
         {
           path: 'login',
+            name: 'Login',
           component: () => import('../pages/login.vue'),
         },
         {
@@ -61,6 +67,18 @@ const router = createRouter({
       ],
     },
   ],
+})
+
+router.beforeEach(async (to, from) => {
+    if (
+        // make sure the user is authenticated
+        localStorage.getItem("isAuthenticated") !== "true" &&
+        // ❗️ Avoid an infinite redirect
+        to.name !== 'Login'
+    ) {
+        // redirect the user to the login page
+        return { name: 'Login'}
+    }
 })
 
 export default router

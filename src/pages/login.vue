@@ -1,6 +1,9 @@
 <script setup>
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import logo from '@images/logo.svg?raw'
+import axios from "axios";
+import {ref} from "vue";
+import router from "@/router";
 
 const form = ref({
   email: '',
@@ -9,6 +12,23 @@ const form = ref({
 })
 
 const isPasswordVisible = ref(false)
+
+const submitAction = () => {
+  console.log('masuk')
+  axios.post('https://dummyjson.com/auth/login', {
+    username: form.value.email,
+    password: form.value.password
+  })
+    .then(function (response) {
+      console.log(response);
+      localStorage.setItem("isAuthenticated", "true")
+      localStorage.setItem("token", response.data.token)
+      router.push('/')
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 </script>
 
 <template>
@@ -42,7 +62,7 @@ const isPasswordVisible = ref(false)
       </VCardText>
 
       <VCardText>
-        <VForm @submit.prevent="$router.push('/')">
+        <VForm @submit.prevent="submitAction">
           <VRow>
             <!-- email -->
             <VCol cols="12">
